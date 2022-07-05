@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :set_states, only: %i[new edit]
 
   # GET /posts or /posts.json
   def index
@@ -14,6 +15,7 @@ class PostsController < ApplicationController
   # GET /posts/new
   def new
     @post = Post.new
+    @states = Post.states.keys.map { |s| [s.humanize, s] }
   end
 
   # GET /posts/1/edit
@@ -22,7 +24,7 @@ class PostsController < ApplicationController
 
   # POST /posts or /posts.json
   def create
-    @post = Post.new(post_params)
+    @post = Post.new(post_params.merge(user: current_user))
 
     respond_to do |format|
       if @post.save
@@ -63,9 +65,13 @@ class PostsController < ApplicationController
     def set_post
       @post = Post.find(params[:id])
     end
+    
+    def set_states
+      @states = Post.states.keys.map { |s| [s.humanize, s] }
+    end
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:title, :content, :state, :user_id)
+      params.require(:post).permit(:title, :content, :state )
     end
 end

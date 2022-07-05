@@ -24,12 +24,7 @@
 
   <div class="field">
     <%= form.label :state %>
-    <%= form.number_field :state %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
+    <%= form.select :state, @states %>
   </div>
 
   <div class="actions">
